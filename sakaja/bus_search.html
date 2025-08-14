@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bus Search</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e6b800; /* Yellow-orange background */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            color: #ffffff;
+            text-align: center;
+        }
+        .header {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 10px 20px;
+            background-color: #cc9900;
+        }
+        .header .menu-icon {
+            font-size: 24px;
+            cursor: pointer;
+            margin-right: auto;
+        }
+        .header-text {
+            width: 100%;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .main-content {
+            width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+            max-width: 500px;
+        }
+        .main-title {
+            font-size: 30px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+        .main-subtitle {
+            font-size: 20px;
+            font-weight: normal;
+            margin-top: 0;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+        .search-container {
+            background-color: #bf8b0f;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .input-field-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        .input-field-group label {
+            text-align: left;
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #ffffff;
+            font-weight: bold;
+        }
+        .input-field-group input {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            background-color: #e6b800;
+            color: #000;
+        }
+        .swap-icon {
+            position: absolute;
+            right: -10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #cc9900;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+        .calendar-container {
+            background-color: #bf8b0f;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .calendar-container h3 {
+            margin: 0 0 10px 0;
+            font-size: 18px;
+            text-align: left;
+        }
+        .calendar-container input {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            background-color: #e6b800;
+            color: #000;
+        }
+        .search-button {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #5d4037;
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <span class="menu-icon">&#9776;</span>
+        <div class="header-text">Convenient<br>Fast<br>Reliable</div>
+    </div>
+
+    <div class="main-content">
+        <h1 class="main-title"></h1>
+        <p class="main-subtitle"></p>
+
+        <div class="search-container">
+            <div class="input-field-group">
+                <input type="text" placeholder="FROM: Enter City" id="fromCity">
+            </div>
+            <div class="input-field-group">
+                <input type="text" placeholder="TO: Enter City" id="toCity">
+            </div>
+            <div class="swap-icon">&#8645;</div>
+        </div>
+
+        <div class="calendar-container">
+            <h3>Journey Date</h3>
+            <input type="text" value="14 August 2025" id="journeyDate">
+        </div>
+
+        <button class="search-button">Search Bus</button>
+    </div>
+
+</body>
+</html>
+  
