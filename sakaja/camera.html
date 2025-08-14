@@ -163,25 +163,19 @@
         }
 
         function triggerCapture() {
-            // In a real application, this is where the actual photo capture would happen.
-            // For this example, we'll just show an alert.
-            alert('ID captured successfully!');
-            // After capture, you might redirect to the next page
-            // window.location.href = 'next_page.html';
+            // Redirect to the next page after a simulated capture
+            window.location.href = 'upload_id_back.html';
         }
 
-        // Simulating the auto-capture condition
         mockAlignButton.addEventListener('click', () => {
             cameraOverlay.classList.add('aligned');
             instructionText.textContent = "Capturing...";
             
-            // Wait a moment before triggering capture
             setTimeout(() => {
                 triggerCapture();
             }, 1000); 
         });
 
-        // Start the camera when the page loads
         window.addEventListener('load', startCamera);
     </script>
 </body>
