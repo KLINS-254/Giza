@@ -70,10 +70,14 @@
             content: '';
             width: 85%;
             max-width: 400px;
-            height: 250px; /* Adjust height for ID card aspect ratio */
+            height: 250px;
             border: 2px solid white;
             border-radius: 15px;
             box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.7);
+            transition: border-color 0.3s ease;
+        }
+        .camera-overlay.aligned::before {
+            border-color: #4CAF50; /* Green color when aligned */
         }
         .camera-feed {
             position: absolute;
@@ -82,7 +86,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            z-index: -1; /* Place behind the overlay */
+            z-index: -1;
         }
         .capture-button-container {
             position: absolute;
@@ -99,6 +103,22 @@
             border: 5px solid #fff;
             background-color: rgba(255, 255, 255, 0.5);
             cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+        .capture-button.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .mock-align-button {
+            position: absolute;
+            bottom: 120px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 10;
         }
     </style>
 </head>
@@ -114,20 +134,24 @@
     </div>
     
     <div class="instruction-container">
-        <h2>Align your ID inside the box</h2>
+        <h2 id="instruction-text">Align your ID inside the box</h2>
     </div>
 
-    <div class="camera-overlay"></div>
+    <div class="camera-overlay" id="cameraOverlay"></div>
 
     <div class="capture-button-container">
         <button class="capture-button" id="captureButton"></button>
     </div>
 
+    <button class="mock-align-button" id="mockAlignButton">Simulate ID Aligned</button>
+
     <script>
         const video = document.getElementById('cameraFeed');
         const captureButton = document.getElementById('captureButton');
+        const cameraOverlay = document.getElementById('cameraOverlay');
+        const instructionText = document.getElementById('instruction-text');
+        const mockAlignButton = document.getElementById('mockAlignButton');
 
-        // This function will request access to the user's camera
         async function startCamera() {
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
@@ -138,10 +162,23 @@
             }
         }
 
-        // This function would be triggered by the capture button
-        captureButton.addEventListener('click', () => {
-            alert('Capture button clicked! Photo capture logic would go here.');
-            // Add logic to capture photo from video stream
+        function triggerCapture() {
+            // In a real application, this is where the actual photo capture would happen.
+            // For this example, we'll just show an alert.
+            alert('ID captured successfully!');
+            // After capture, you might redirect to the next page
+            // window.location.href = 'next_page.html';
+        }
+
+        // Simulating the auto-capture condition
+        mockAlignButton.addEventListener('click', () => {
+            cameraOverlay.classList.add('aligned');
+            instructionText.textContent = "Capturing...";
+            
+            // Wait a moment before triggering capture
+            setTimeout(() => {
+                triggerCapture();
+            }, 1000); 
         });
 
         // Start the camera when the page loads
