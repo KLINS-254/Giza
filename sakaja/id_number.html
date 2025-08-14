@@ -161,14 +161,14 @@
         const maxLength = 9;
 
         nationalIdInput.addEventListener('input', function(event) {
-            let idNumber = this.value.replace(/\D/g, ''); // Remove all non-digit characters
+            let idNumber = this.value.replace(/\D/g, ''); 
             this.value = idNumber;
 
             if (idNumber.length === maxLength) {
                 continueButton.classList.add('active');
                 continueButton.disabled = false;
                 continueButton.onclick = function() {
-                    alert('Continue button clicked!');
+                    window.location.href = 'upload_id.html'; // Changed to redirect to the new page
                 };
             } else {
                 continueButton.classList.remove('active');
