@@ -15,7 +15,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            position: relative; /* Needed for the footer's position to work correctly */
+            position: relative;
         }
         .header {
             width: 100%;
@@ -30,7 +30,7 @@
         .header .logo {
             width: 40px;
             height: 40px;
-            background-color: #ccc; /* Placeholder for a logo image */
+            background-color: #ccc;
             border-radius: 5px;
             margin-right: 15px;
         }
@@ -44,7 +44,6 @@
             max-width: 400px;
             padding: 20px;
             text-align: center;
-            margin-top: 50px; /* Adjusting the top margin to move it up */
         }
         .input-group {
             margin-bottom: 20px;
@@ -93,6 +92,12 @@
             outline: none;
             flex-grow: 1;
             font-size: 16px;
+            -moz-appearance: textfield; /* Firefox */
+        }
+        .phone-input::-webkit-outer-spin-button,
+        .phone-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
         }
         .next-button {
             width: 100%;
@@ -123,10 +128,10 @@
             line-height: 1.4;
             border-radius: 5px;
             position: fixed;
-            bottom: 10px; /* 1cm margin from the bottom */
+            bottom: 10px;
             left: 50%;
             transform: translateX(-50%);
-            z-index: 10; /* Ensures the footer is on top */
+            z-index: 10;
         }
     </style>
 </head>
@@ -144,7 +149,7 @@
                 <span class="phone-icon">&#9990;</span>
                 <span class="country-code">+254 (0)</span>
                 <span class="divider"></span>
-                <input type="text" class="phone-input" placeholder="123-456-789" id="phoneNumberInput">
+                <input type="tel" class="phone-input" placeholder="123-456-789" id="phoneNumberInput">
             </div>
         </div>
         
@@ -160,30 +165,41 @@
         const nextButton = document.getElementById('nextButton');
         const maxLength = 9;
 
-        phoneNumberInput.addEventListener('input', function() {
-            const phoneNumber = this.value.replace(/\D/g, ''); // Remove all non-digit characters
-            
+        phoneNumberInput.addEventListener('input', function(event) {
+            let phoneNumber = this.value.replace(/\D/g, ''); // Remove non-digit characters
+
+            // Format the number as 123-456-789
+            let formattedNumber = '';
+            for (let i = 0; i < phoneNumber.length; i++) {
+                if (i === 3 || i === 6) {
+                    formattedNumber += '-';
+                }
+                formattedNumber += phoneNumber[i];
+            }
+            this.value = formattedNumber;
+
             // Limit the length of the input
             if (phoneNumber.length > maxLength) {
-                this.value = phoneNumber.slice(0, maxLength);
+                this.value = formattedNumber.slice(0, maxLength + 2); // +2 for the dashes
+                phoneNumber = phoneNumber.slice(0, maxLength);
             }
             
             // Check if the length is exactly 9 and enable/style the button
-            if (this.value.length === maxLength) {
+            if (phoneNumber.length === maxLength) {
                 nextButton.classList.add('active');
                 nextButton.onclick = function() {
-                    alert('Next button clicked! Phone number: ' + phoneNumberInput.value);
-                    // Add your navigation or other logic here
+                    alert('Next button clicked! Phone number: ' + phoneNumber);
                 };
             } else {
                 nextButton.classList.remove('active');
-                nextButton.onclick = null; // Remove the click handler if not active
+                nextButton.onclick = null;
             }
         });
 
-        // Optional: prevent keypress after max length
+        // Optional: prevent keypress after max length (now also handling formatted length)
         phoneNumberInput.addEventListener('keydown', function(event) {
-            if (this.value.length >= maxLength && event.key !== 'Backspace' && event.key !== 'Delete') {
+            let phoneNumber = this.value.replace(/\D/g, '');
+            if (phoneNumber.length >= maxLength && event.key !== 'Backspace' && event.key !== 'Delete') {
                 event.preventDefault();
             }
         });
