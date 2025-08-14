@@ -14,6 +14,38 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .header {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 15px 20px;
+            background-color: #f0f0f0;
+            border-bottom: 1px solid #ddd;
+            box-sizing: border-box;
+        }
+        .header .logo {
+            width: 40px;
+            height: 40px;
+            background-color: #ccc; /* Placeholder for a logo image */
+            border-radius: 5px;
+            margin-right: 15px;
+        }
+        .header .title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
             padding: 20px;
             box-sizing: border-box;
         }
@@ -94,29 +126,36 @@
             font-weight: bold;
             line-height: 1.4;
             border-radius: 5px;
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
 
-    <div class="login-container">
-        <div class="input-group">
-            <div class="input-label">Enter your mobile number</div>
-            <div class="input-field-container">
-                <span class="phone-icon">&#9990;</span>
-                <span class="country-code">+254 (0)</span>
-                <span class="divider"></span>
-                <input type="text" class="phone-input" placeholder="123-456-789">
-            </div>
-        </div>
-        
-        <button class="next-button">NEXT</button>
+    <div class="header">
+        <div class="logo"></div>
+        <div class="title">Kogo loan</div>
     </div>
 
-    <div class="footer-note">
-        FOR RETURNING CLIENTS: remember to log in with the phone number you registered with!
+    <div class="main-content">
+        <div class="login-container">
+            <div class="input-group">
+                <div class="input-label">Enter your mobile number</div>
+                <div class="input-field-container">
+                    <span class="phone-icon">&#9990;</span>
+                    <span class="country-code">+254 (0)</span>
+                    <span class="divider"></span>
+                    <input type="text" class="phone-input" placeholder="123-456-789">
+                </div>
+            </div>
+            
+            <button class="next-button">NEXT</button>
+        </div>
+
+        <div class="footer-note">
+            FOR RETURNING CLIENTS: remember to log in with the phone number you registered with!
+        </div>
     </div>
 
 </body>
-  </html>
-  
+</html>
