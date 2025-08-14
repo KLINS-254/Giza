@@ -27,14 +27,15 @@
             border-bottom: 1px solid #ddd;
             box-sizing: border-box;
         }
-        .header .logo {
+        .header .logo-container {
+            display: flex;
+            align-items: center;
+        }
+        .header img {
             width: 40px;
             height: 40px;
-            background-image: url('sakaja/fogo.png'); /* Updated path to 'sakaja/fogo.png' */
-            background-size: cover;
-            background-position: center;
+            margin-right: 15px; /* Adds space between the logo and text */
             border-radius: 5px;
-            margin-right: 15px; /* Space between logo and text */
         }
         .header .title {
             font-size: 20px;
@@ -140,8 +141,10 @@
 <body>
 
     <div class="header">
-        <div class="logo"></div>
-        <div class="title">Kogo loan</div>
+        <div class="logo-container">
+            <img src="fogo.png" alt="Fogo Logo">
+            <span class="title">Kogo loan</span>
+        </div>
     </div>
 
     <div class="login-container">
