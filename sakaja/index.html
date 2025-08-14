@@ -20,19 +20,26 @@
         .header {
             width: 100%;
             display: flex;
+            flex-direction: column; /* Changed to column to stack elements */
             align-items: center;
-            justify-content: flex-start;
+            justify-content: center;
             padding: 15px 20px;
             background-color: #f0f0f0;
             border-bottom: 1px solid #ddd;
             box-sizing: border-box;
         }
+        .header .logo-container {
+            text-align: center;
+        }
         .header .logo {
-            width: 40px;
-            height: 40px;
-            background-color: #ccc; /* Placeholder for a logo image */
-            border-radius: 5px;
-            margin-right: 15px;
+            width: 80px;  /* Increased size for better visibility */
+            height: 80px;
+            background-image: url('Fogo.png'); /* The image you requested */
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            display: block;
+            margin-bottom: 5px; /* Spacing between image and text */
         }
         .header .title {
             font-size: 20px;
@@ -133,8 +140,10 @@
 <body>
 
     <div class="header">
-        <div class="logo"></div>
-        <div class="title">Kogo loan</div>
+        <div class="logo-container">
+            <div class="logo"></div>
+            <div class="title">Kogo</div>
+        </div>
     </div>
 
     <div class="main-content">
