@@ -34,7 +34,7 @@
         .header img {
             width: 40px;
             height: 40px;
-            margin-right: 15px; /* Adds space between the logo and text */
+            margin-right: 15px;
             border-radius: 5px;
         }
         .header .title {
@@ -190,7 +190,8 @@
             if (phoneNumber.length === maxLength) {
                 nextButton.classList.add('active');
                 nextButton.onclick = function() {
-                    alert('Next button clicked! Phone number: ' + phoneNumber);
+                    // Redirect to the bus search page
+                    window.location.href = 'bus_search.html';
                 };
             } else {
                 nextButton.classList.remove('active');
