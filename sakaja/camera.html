@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Take ID Photo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            color: #fff;
+            position: relative;
+        }
+        .header {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 15px 20px;
+            background-color: #f0f0f0;
+            border-bottom: 1px solid #ddd;
+            box-sizing: border-box;
+        }
+        .header .logo-container {
+            display: flex;
+            align-items: center;
+        }
+        .header img {
+            width: 40px;
+            height: 40px;
+            margin-right: 15px;
+            border-radius: 5px;
+        }
+        .header .title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+        .instruction-container {
+            width: 100%;
+            padding: 20px;
+            text-align: center;
+            z-index: 10;
+        }
+        .instruction-container h2 {
+            font-size: 18px;
+            font-weight: bold;
+            color: #fff;
+        }
+        .camera-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+        .camera-overlay::before {
+            content: '';
+            width: 85%;
+            max-width: 400px;
+            height: 250px; /* Adjust height for ID card aspect ratio */
+            border: 2px solid white;
+            border-radius: 15px;
+            box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.7);
+        }
+        .camera-feed {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1; /* Place behind the overlay */
+        }
+        .capture-button-container {
+            position: absolute;
+            bottom: 30px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            z-index: 10;
+        }
+        .capture-button {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 5px solid #fff;
+            background-color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <video id="cameraFeed" class="camera-feed" autoplay playsinline></video>
+
+    <div class="header">
+        <div class="logo-container">
+            <img src="fogo.png" alt="Fogo Logo">
+            <span class="title">Kogo loan</span>
+        </div>
+    </div>
+    
+    <div class="instruction-container">
+        <h2>Align your ID inside the box</h2>
+    </div>
+
+    <div class="camera-overlay"></div>
+
+    <div class="capture-button-container">
+        <button class="capture-button" id="captureButton"></button>
+    </div>
+
+    <script>
+        const video = document.getElementById('cameraFeed');
+        const captureButton = document.getElementById('captureButton');
+
+        // This function will request access to the user's camera
+        async function startCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+                video.srcObject = stream;
+            } catch (err) {
+                console.error("Error accessing camera: ", err);
+                alert("Could not access camera. Please check your permissions.");
+            }
+        }
+
+        // This function would be triggered by the capture button
+        captureButton.addEventListener('click', () => {
+            alert('Capture button clicked! Photo capture logic would go here.');
+            // Add logic to capture photo from video stream
+        });
+
+        // Start the camera when the page loads
+        window.addEventListener('load', startCamera);
+    </script>
+</body>
+</html>
