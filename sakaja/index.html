@@ -10,12 +10,12 @@
             background-color: #f0f0f0;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
             align-items: center;
             min-height: 100vh;
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            position: relative; /* Needed for the footer's position to work correctly */
         }
         .header {
             width: 100%;
@@ -39,21 +39,12 @@
             font-weight: bold;
             color: #333;
         }
-        .main-content {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            padding: 20px;
-            box-sizing: border-box;
-        }
         .login-container {
             width: 100%;
             max-width: 400px;
             padding: 20px;
             text-align: center;
+            margin-top: 50px; /* Adjusting the top margin to move it up */
         }
         .input-group {
             margin-bottom: 20px;
@@ -115,7 +106,6 @@
             cursor: not-allowed;
             text-transform: uppercase;
         }
-        /* New active state for the button */
         .next-button.active {
             background-color: #000000;
             color: #ffffff;
@@ -132,7 +122,11 @@
             font-weight: bold;
             line-height: 1.4;
             border-radius: 5px;
-            margin-top: 20px;
+            position: fixed;
+            bottom: 10px; /* 1cm margin from the bottom */
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10; /* Ensures the footer is on top */
         }
     </style>
 </head>
@@ -143,24 +137,22 @@
         <div class="title">Kogo loan</div>
     </div>
 
-    <div class="main-content">
-        <div class="login-container">
-            <div class="input-group">
-                <div class="input-label">Enter your mobile number</div>
-                <div class="input-field-container">
-                    <span class="phone-icon">&#9990;</span>
-                    <span class="country-code">+254 (0)</span>
-                    <span class="divider"></span>
-                    <input type="text" class="phone-input" placeholder="123-456-789" id="phoneNumberInput">
-                </div>
+    <div class="login-container">
+        <div class="input-group">
+            <div class="input-label">Enter your mobile number</div>
+            <div class="input-field-container">
+                <span class="phone-icon">&#9990;</span>
+                <span class="country-code">+254 (0)</span>
+                <span class="divider"></span>
+                <input type="text" class="phone-input" placeholder="123-456-789" id="phoneNumberInput">
             </div>
-            
-            <button class="next-button" id="nextButton">NEXT</button>
         </div>
+        
+        <button class="next-button" id="nextButton">NEXT</button>
+    </div>
 
-        <div class="footer-note">
-            FOR RETURNING CLIENTS: remember to log in with the phone number you registered with!
-        </div>
+    <div class="footer-note">
+        FOR RETURNING CLIENTS: remember to log in with the phone number you registered with!
     </div>
     
     <script>
@@ -179,7 +171,6 @@
             // Check if the length is exactly 9 and enable/style the button
             if (this.value.length === maxLength) {
                 nextButton.classList.add('active');
-                // You can also add an 'onclick' handler here
                 nextButton.onclick = function() {
                     alert('Next button clicked! Phone number: ' + phoneNumberInput.value);
                     // Add your navigation or other logic here
