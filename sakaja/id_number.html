@@ -148,7 +148,7 @@
         <div class="input-group">
             <div class="input-label-container">
                 <div class="input-label">National Id</div>
-                <input type="text" class="input-field" placeholder="Enter your national id number" id="nationalIdInput">
+                <input type="tel" class="input-field" placeholder="Enter your national id number" id="nationalIdInput" inputmode="numeric">
             </div>
         </div>
         
@@ -158,9 +158,13 @@
     <script>
         const nationalIdInput = document.getElementById('nationalIdInput');
         const continueButton = document.getElementById('continueButton');
+        const maxLength = 9;
 
-        nationalIdInput.addEventListener('input', function() {
-            if (this.value.trim().length > 0) {
+        nationalIdInput.addEventListener('input', function(event) {
+            let idNumber = this.value.replace(/\D/g, ''); // Remove all non-digit characters
+            this.value = idNumber;
+
+            if (idNumber.length === maxLength) {
                 continueButton.classList.add('active');
                 continueButton.disabled = false;
                 continueButton.onclick = function() {
@@ -170,6 +174,13 @@
                 continueButton.classList.remove('active');
                 continueButton.disabled = true;
                 continueButton.onclick = null;
+            }
+        });
+
+        nationalIdInput.addEventListener('keydown', function(event) {
+            let idNumber = this.value.replace(/\D/g, '');
+            if (idNumber.length >= maxLength && event.key !== 'Backspace' && event.key !== 'Delete') {
+                event.preventDefault();
             }
         });
     </script>
