@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Not Eligible</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        .header {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 15px 20px;
+            background-color: #f0f0f0;
+            border-bottom: 1px solid #ddd;
+            box-sizing: border-box;
+        }
+        .header .logo-container {
+            display: flex;
+            align-items: center;
+        }
+        .header img {
+            width: 40px;
+            height: 40px;
+            margin-right: 15px;
+            border-radius: 5px;
+        }
+        .header .title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+        .content {
+            padding: 40px 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            max-width: 450px;
+            text-align: left;
+        }
+        .content h2 {
+            font-size: 22px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .content p {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.5;
+            margin: 0;
+        }
+        .redirect-button {
+            width: 80%;
+            max-width: 300px;
+            padding: 15px;
+            background-color: #000000;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="logo-container">
+            <img src="fogo.png" alt="Fogo Logo">
+            <span class="title">Kogo loan</span>
+        </div>
+    </div>
+    
+    <div class="content">
+        <h2>We are sorry, but you're not eligible for a loan at the moment</h2>
+        <p>Kindly check your account after 7 days.</p>
+        <button class="redirect-button" onclick="window.location.href='index.html'">TRY AGAIN</button>
+    </div>
+
+</body>
+</html>
