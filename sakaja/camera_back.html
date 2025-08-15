@@ -77,7 +77,7 @@
             transition: border-color 0.3s ease;
         }
         .camera-overlay.aligned::before {
-            border-color: #4CAF50; /* Green color when aligned */
+            border-color: #4CAF50;
         }
         .camera-feed {
             position: absolute;
@@ -163,9 +163,7 @@
         }
 
         function triggerCapture() {
-            // This is where you would redirect to the next page in the flow
-            alert("Back of ID captured! Redirecting to the next step.");
-            // Example: window.location.href = 'next_registration_step.html';
+            window.location.href = 'confirmation_waiting.html';
         }
 
         mockAlignButton.addEventListener('click', () => {
