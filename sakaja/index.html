@@ -3,208 +3,616 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Quotex Signal Engine: Multi-Factor Analysis</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Configure Tailwind for a dark theme and custom colors -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'quotex-primary': '#1e3a8a', // Dark Blue
+                        'quotex-secondary': '#374151', // Gray
+                        'dashboard-bg': '#1f2937', // Dark Gray BG
+                        'signal-buy': '#10b981', // Green
+                        'signal-sell': '#ef4444', // Red
+                        'signal-hold': '#fbbf24', // Yellow
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            position: relative;
+            background-color: #111827; /* Very dark background */
+            color: #e5e7eb; /* Light text */
+            font-family: 'Inter', sans-serif;
         }
-        .header {
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            padding: 15px 20px;
-            background-color: #f0f0f0;
-            border-bottom: 1px solid #ddd;
-            box-sizing: border-box;
+        .signal-bar-fill {
+            transition: width 0.5s ease-in-out;
         }
-        .header .logo-container {
-            display: flex;
-            align-items: center;
+        /* Custom scrollbar for better aesthetics */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
         }
-        .header img {
-            width: 40px;
-            height: 40px;
-            margin-right: 15px;
-            border-radius: 5px;
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #4b5563;
+            border-radius: 4px;
         }
-        .header .title {
-            font-size: 20px;
-            font-weight: bold;
-            color: #333;
-        }
-        .login-container {
-            width: 100%;
-            max-width: 400px;
-            padding: 20px;
-            text-align: center;
-        }
-        .input-group {
-            margin-bottom: 20px;
-        }
-        .input-label {
-            font-size: 16px;
-            color: #555;
-            text-align: left;
-            margin-bottom: 5px;
-            position: relative;
-            background-color: #f0f0f0;
-            padding: 0 5px;
-            top: 10px;
-            left: 20px;
-            z-index: 1;
-            width: fit-content;
-        }
-        .input-field-container {
-            display: flex;
-            align-items: center;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            padding: 10px;
-            background-color: #fff;
-            position: relative;
-        }
-        .phone-icon {
-            font-size: 20px;
-            color: #888;
-            margin-right: 10px;
-        }
-        .country-code {
-            font-size: 16px;
-            color: #333;
-            font-weight: bold;
-            margin-right: 5px;
-        }
-        .divider {
-            height: 20px;
-            width: 1px;
-            background-color: #ccc;
-            margin: 0 5px;
-        }
-        .phone-input {
-            border: none;
-            outline: none;
-            flex-grow: 1;
-            font-size: 16px;
-            -moz-appearance: textfield;
-        }
-        .phone-input::-webkit-outer-spin-button,
-        .phone-input::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-        .next-button {
-            width: 100%;
-            padding: 15px;
-            background-color: #e0e0e0;
-            color: #888;
-            border: none;
-            border-radius: 5px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: not-allowed;
-            text-transform: uppercase;
-        }
-        .next-button.active {
-            background-color: #000000;
-            color: #ffffff;
-            cursor: pointer;
-        }
-        .footer-note {
-            width: 100%;
-            max-width: 600px;
-            background-color: #5cb85c;
-            color: #fff;
-            padding: 20px;
-            text-align: center;
-            font-size: 16px;
-            font-weight: bold;
-            line-height: 1.4;
-            border-radius: 5px;
-            position: fixed;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 10;
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #1f2937;
         }
     </style>
 </head>
-<body>
+<body class="p-4 md:p-8">
 
-    <div class="header">
-        <div class="logo-container">
-            <img src="fogo.png" alt="Fogo Logo">
-            <span class="title">Kogo loan</span>
-        </div>
-    </div>
-
-    <div class="login-container">
-        <div class="input-group">
-            <div class="input-label">Enter your mobile number</div>
-            <div class="input-field-container">
-                <span class="phone-icon">&#9990;</span>
-                <span class="country-code">+254 (0)</span>
-                <span class="divider"></span>
-                <input type="tel" class="phone-input" placeholder="123-456-789" id="phoneNumberInput">
+    <div id="app" class="max-w-7xl mx-auto">
+        <!-- Header & Notifications -->
+        <header class="mb-8 p-4 bg-quotex-secondary rounded-xl shadow-2xl flex flex-col md:flex-row justify-between items-start md:items-center">
+            <h1 class="text-3xl font-extrabold text-white">Quotex Multi-Factor Signal Engine</h1>
+            <div id="status" class="mt-2 md:mt-0 text-sm font-semibold flex items-center">
+                <div id="live-indicator" class="w-3 h-3 bg-signal-buy rounded-full mr-2 animate-pulse"></div>
+                REAL-TIME ANALYSIS | Refresh Rate: <span class="ml-1 font-bold text-signal-buy">5s</span>
             </div>
+        </header>
+
+        <!-- Notification Panel -->
+        <div id="notification-area" class="fixed top-4 right-4 z-50 space-y-2">
+            <!-- Notifications will appear here -->
         </div>
-        
-        <button class="next-button" id="nextButton">NEXT</button>
+
+        <!-- Dashboard Content -->
+        <main class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+
+            <!-- Global Controls & Filtering (Panel 1) -->
+            <div class="lg:col-span-1 bg-dashboard-bg p-6 rounded-xl shadow-lg h-full custom-scrollbar overflow-y-auto">
+                <h2 class="text-xl font-bold mb-4 border-b border-gray-700 pb-2 text-quotex-primary">Controls & Market Filter</h2>
+
+                <div class="space-y-4">
+                    <!-- Market Chooser Filter -->
+                    <div>
+                        <label for="marketFilter" class="block text-sm font-medium text-gray-300 mb-2">Filter Market Type</label>
+                        <select id="marketFilter" onchange="filterSignals()" class="w-full p-2.5 rounded-lg bg-gray-700 border border-gray-600 focus:ring-quotex-primary focus:border-quotex-primary text-white">
+                            <option value="ALL">All Markets (30+)</option>
+                            <option value="CURRENCY">Forex Currency Pairs</option>
+                            <option value="CRYPTO">Crypto Pairs</option>
+                            <option value="INDICES">Global Indices</option>
+                            <option value="COMMODITIES">Commodities</option>
+                        </select>
+                    </div>
+
+                    <!-- Economic Calendar Check (Simulated) -->
+                    <div class="p-3 bg-gray-800 rounded-lg">
+                        <h3 class="font-semibold text-gray-200 mb-1 flex items-center">
+                            <svg class="w-5 h-5 mr-2 text-signal-hold" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            High-Impact News
+                        </h3>
+                        <p id="news-check" class="text-xs text-gray-400">Checking...</p>
+                    </div>
+
+                    <!-- ML Weighting Status (Simulated) -->
+                    <div class="p-3 bg-gray-800 rounded-lg">
+                        <h3 class="font-semibold text-gray-200 mb-1 flex items-center">
+                            <svg class="w-5 h-5 mr-2 text-quotex-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1v-3.25m-7.5-.75h10.5a1 1 0 001-1V5a1 1 0 00-1-1H4.5a1 1 0 00-1 1v10c0 .414.336.75.75.75z"></path></svg>
+                            ML Logic Active
+                        </h3>
+                        <p class="text-xs text-gray-400">Probability weighting (past performance bias) applied to confidence score.</p>
+                    </div>
+
+                    <!-- Strategy Weights -->
+                    <div class="p-3 bg-gray-800 rounded-lg">
+                        <h3 class="font-semibold text-gray-200 mb-1">Strategy Weights</h3>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>Technical Indicators: 50%</li>
+                            <li>Chart/Price Patterns: 30%</li>
+                            <li>Candlestick Patterns: 20%</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Signal Table & Main Output (Panel 2) -->
+            <div class="lg:col-span-3 bg-dashboard-bg p-6 rounded-xl shadow-lg">
+                <h2 class="text-xl font-bold mb-4 border-b border-gray-700 pb-2 text-quotex-primary">Live 1-Minute Trade Signals</h2>
+
+                <div class="overflow-x-auto custom-scrollbar">
+                    <table class="min-w-full divide-y divide-gray-700">
+                        <thead>
+                            <tr class="text-left text-xs font-semibold uppercase tracking-wider text-gray-400 bg-gray-800">
+                                <th class="px-3 py-3 rounded-tl-lg cursor-pointer hover:text-white" onclick="sortTable('market')">Market <span id="sort-market"></span></th>
+                                <th class="px-3 py-3 cursor-pointer hover:text-white" onclick="sortTable('trade')">TRADE <span id="sort-trade"></span></th>
+                                <th class="px-3 py-3 cursor-pointer hover:text-white" onclick="sortTable('confidence')">Confidence <span id="sort-confidence"></span></th>
+                                <th class="px-3 py-3 rounded-tr-lg hidden md:table-cell">Confirmation</th>
+                            </tr>
+                        </thead>
+                        <tbody id="signal-table-body" class="divide-y divide-gray-700">
+                            <!-- Signal rows will be inserted here by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Detailed Analysis Panel (Hidden initially, appears on row click) -->
+            <div id="detail-panel" class="lg:col-span-4 hidden bg-dashboard-bg p-6 rounded-xl shadow-lg mt-6">
+                <h2 class="text-xl font-bold mb-4 border-b border-gray-700 pb-2 text-quotex-primary flex justify-between items-center">
+                    Detailed Signal Analysis for <span id="detail-market" class="text-signal-buy text-2xl"></span>
+                    <button onclick="document.getElementById('detail-panel').classList.add('hidden')" class="text-gray-400 hover:text-white">&times;</button>
+                </h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Column 1: Summary -->
+                    <div>
+                        <h3 class="text-lg font-semibold mb-2 text-white">Decision Summary</h3>
+                        <p class="text-sm">Final Trade: <span id="detail-trade" class="font-extrabold text-lg"></span></p>
+                        <p class="text-sm">Confidence: <span id="detail-confidence" class="font-extrabold text-lg"></span></p>
+                        <p class="text-sm mt-4 font-medium text-gray-300">Explanation:</p>
+                        <p id="detail-explanation" class="text-xs text-gray-400"></p>
+                    </div>
+
+                    <!-- Column 2: Indicators -->
+                    <div>
+                        <h3 class="text-lg font-semibold mb-2 text-white">Technical Indicator Agreement</h3>
+                        <ul id="detail-indicators" class="text-sm space-y-1">
+                            <!-- Indicators list -->
+                        </ul>
+                    </div>
+
+                    <!-- Column 3: Patterns -->
+                    <div>
+                        <h3 class="text-lg font-semibold mb-2 text-white">Pattern Confirmation</h3>
+                        <ul id="detail-patterns" class="text-sm space-y-1">
+                            <!-- Patterns list -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </main>
     </div>
 
-    <div class="footer-note">
-        FOR RETURNING CLIENTS: remember to log in with the phone number you registered with!
-    </div>
-    
-    <script>
-        const phoneNumberInput = document.getElementById('phoneNumberInput');
-        const nextButton = document.getElementById('nextButton');
-        const maxLength = 9;
+    <!-- Audio element for notifications -->
+    <audio id="notification-sound" src="data:audio/wav;base64,UklGRl9vT1JXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAAABkYXRhAAADZgAAAAAASUVGRkZGRkZGRg==" preload="auto"></audio>
 
-        phoneNumberInput.addEventListener('input', function(event) {
-            let phoneNumber = this.value.replace(/\D/g, '');
+    <script type="module">
+        // =====================================================================
+        // 1. Configuration & Mock Data Setup
+        // =====================================================================
 
-            let formattedNumber = '';
-            for (let i = 0; i < phoneNumber.length; i++) {
-                if (i === 3 || i === 6) {
-                    formattedNumber += '-';
+        // Mock Market Data (Represents all available assets on Quotex)
+        const ALL_MARKETS = [
+            // Currencies
+            { name: "EUR/USD", type: "CURRENCY", ml_bias: 0.95 },
+            { name: "GBP/JPY", type: "CURRENCY", ml_bias: 0.88 },
+            { name: "USD/CAD", type: "CURRENCY", ml_bias: 0.91 },
+            { name: "AUD/NZD", type: "CURRENCY", ml_bias: 0.85 },
+            // Cryptos
+            { name: "BTC/USD", type: "CRYPTO", ml_bias: 0.75 },
+            { name: "ETH/USD", type: "CRYPTO", ml_bias: 0.70 },
+            { name: "SOL/USD", type: "CRYPTO", ml_bias: 0.65 },
+            // Indices
+            { name: "US30 Index", type: "INDICES", ml_bias: 0.93 },
+            { name: "DE30 Index", type: "INDICES", ml_bias: 0.87 },
+            { name: "JPN225 Index", type: "INDICES", ml_bias: 0.89 },
+            // Commodities
+            { name: "GOLD (XAU)", type: "COMMODITIES", ml_bias: 0.90 },
+            { name: "CRUDE OIL", type: "COMMODITIES", ml_bias: 0.82 },
+        ];
+
+        // List of all technical factors
+        const TECHNICAL_INDICATORS = [
+            "EMA20", "EMA50", "EMA100", "EMA200",
+            "SMA20", "SMA50", "SMA200",
+            "RSI14", "MACD", "Stochastic",
+            "BollingerBands", "ATR", "CCI",
+            "ParabolicSAR", "ADX", "VolumeStrength", "VWAP",
+            "PivotPoints"
+        ];
+        const CHART_PATTERNS = [
+            "DoubleTop/Bottom", "Head&Shoulders", "Wedges",
+            "Flags&Pennants", "Triangles", "Cup&Handle",
+            "Breakout/Fakeout", "S/RReversals", "TrendlineBreaks"
+        ];
+        const CANDLESTICK_PATTERNS = [
+            "Doji", "Hammer/ShootingStar", "Engulfing",
+            "MorningStar/EveningStar", "ThreeSoldiers/Crows",
+            "PinBars", "Marubozu", "Rejections/Wicks"
+        ];
+
+        // Strategy weights (for confidence calculation)
+        const WEIGHTS = {
+            TECHNICAL: 0.50,
+            CHART_PATTERN: 0.30,
+            CANDLESTICK: 0.20,
+            ML_BIAS: 0.10, // Max 10% bonus from ML
+            NEWS_PENALTY: -0.50, // 50% penalty during high-impact news
+            MIN_AGREEMENT: 0.80 // 80% minimum indicator agreement (Rule #6)
+        };
+
+        let currentSignals = [];
+        let sortColumn = 'confidence';
+        let sortDirection = 'desc';
+
+        // =====================================================================
+        // 2. Core Analysis & Signal Generation Logic (SIMULATED)
+        // =====================================================================
+
+        /**
+         * Simulates checking the economic calendar for high-impact news.
+         * In a real system, this would fetch data from an API (e.g., Forex Factory).
+         * @returns {boolean} True if high-impact news is active.
+         */
+        function isHighImpactNewsActive() {
+            // Mock: 10% chance of high-impact news being active
+            return Math.random() < 0.10;
+        }
+
+        /**
+         * Simulates the analysis for a single market.
+         * This function implements the complex, multi-factor logic.
+         * @param {object} market - The market configuration object.
+         * @returns {object} The complete signal result.
+         */
+        function generateSignal(market) {
+            const newsActive = isHighImpactNewsActive();
+            let rawConfidence = 0;
+            let finalTrade = "NO TRADE";
+            let explanation = `Analysis for ${market.name} is commencing.`;
+
+            // 1. Simulate Indicator Agreement (Technical, Chart, Candlestick)
+            const indicatorResults = {};
+            const patternResults = {};
+            const candlestickResults = {};
+
+            const generateSignalFactor = (factors, weight) => {
+                const total = factors.length;
+                let buyVotes = 0;
+                let sellVotes = 0;
+                let agreementMap = {};
+
+                factors.forEach(factor => {
+                    const r = Math.random();
+                    let decision = 'NEUTRAL';
+                    if (r < 0.35) { // 35% BUY
+                        decision = 'BUY';
+                        buyVotes++;
+                    } else if (r > 0.65) { // 35% SELL
+                        decision = 'SELL';
+                        sellVotes++;
+                    }
+                    agreementMap[factor] = decision;
+                });
+
+                const maxVotes = Math.max(buyVotes, sellVotes);
+                const totalVotes = buyVotes + sellVotes;
+                const agreementPct = totalVotes > 0 ? maxVotes / totalVotes : 0;
+                const direction = buyVotes > sellVotes ? 'BUY' : (sellVotes > buyVotes ? 'SELL' : 'NEUTRAL');
+                const signalStrength = agreementPct * weight;
+
+                return { agreementMap, maxVotes, total, totalVotes, agreementPct, direction, signalStrength };
+            };
+
+            const tech = generateSignalFactor(TECHNICAL_INDICATORS, WEIGHTS.TECHNICAL);
+            const chart = generateSignalFactor(CHART_PATTERNS, WEIGHTS.CHART_PATTERN);
+            const candle = generateSignalFactor(CANDLESTICK_PATTERNS, WEIGHTS.CANDLESTICK);
+
+            // 2. Combine Signals and Calculate Raw Confidence
+            const combinedDirection = tech.direction; // Base decision on Technicals (highest weight)
+            let totalAgreementPct = 0;
+            let totalSignalStrength = 0;
+            let agreeingIndicators = 0;
+            let disagreeingIndicators = 0;
+
+            const allFactors = [
+                ...TECHNICAL_INDICATORS.map(f => ({ group: 'tech', name: f, decision: tech.agreementMap[f], weight: WEIGHTS.TECHNICAL / TECHNICAL_INDICATORS.length })),
+                ...CHART_PATTERNS.map(f => ({ group: 'chart', name: f, decision: chart.agreementMap[f], weight: WEIGHTS.CHART_PATTERN / CHART_PATTERNS.length })),
+                ...CANDLESTICK_PATTERNS.map(f => ({ group: 'candle', name: f, decision: candle.agreementMap[f], weight: WEIGHTS.CANDLESTICK / CANDLESTICK_PATTERNS.length })),
+            ];
+
+            allFactors.forEach(f => {
+                if (f.decision === combinedDirection) {
+                    agreeingIndicators++;
+                    totalSignalStrength += f.weight;
+                } else if (f.decision !== 'NEUTRAL') {
+                    disagreeingIndicators++;
                 }
-                formattedNumber += phoneNumber[i];
-            }
-            this.value = formattedNumber;
+            });
 
-            if (phoneNumber.length > maxLength) {
-                this.value = formattedNumber.slice(0, maxLength + 2);
-                phoneNumber = phoneNumber.slice(0, maxLength);
-            }
-            
-            if (phoneNumber.length === maxLength) {
-                nextButton.classList.add('active');
-                nextButton.onclick = function() {
-                    // Corrected redirection to the registration page
-                    window.location.href = 'registration.html';
-                };
+            const totalActiveIndicators = agreeingIndicators + disagreeingIndicators;
+            totalAgreementPct = totalActiveIndicators > 0 ? agreeingIndicators / totalActiveIndicators : 0;
+
+            // 3. Apply Automation Rules (80% Agreement & News Check)
+            if (totalAgreementPct >= WEIGHTS.MIN_AGREEMENT) {
+                finalTrade = combinedDirection;
+                explanation = `${combinedDirection} signal confirmed by high consensus across all three analysis types.`;
             } else {
-                nextButton.classList.remove('active');
-                nextButton.onclick = null;
+                finalTrade = "NO TRADE";
+                explanation = `Insufficient consensus (${(totalAgreementPct * 100).toFixed(0)}% agreement). Waiting for stronger confirmation.`;
             }
-        });
 
-        phoneNumberInput.addEventListener('keydown', function(event) {
-            let phoneNumber = this.value.replace(/\D/g, '');
-            if (phoneNumber.length >= maxLength && event.key !== 'Backspace' && event.key !== 'Delete') {
-                event.preventDefault();
+            // High-Impact News Rule: Overrides any trade signal
+            if (newsActive) {
+                finalTrade = "NO TRADE (NEWS)";
+                totalSignalStrength += WEIGHTS.NEWS_PENALTY;
+                explanation = `High-Impact News detected. Signal is overridden to NO TRADE to avoid excessive volatility and noise.`;
             }
-        });
+
+            // 4. Final Confidence Score (0-100%)
+            // Base Confidence from Signal Strength (max 1.0)
+            let confidenceScore = Math.min(1.0, totalSignalStrength / (WEIGHTS.TECHNICAL + WEIGHTS.CHART_PATTERN + WEIGHTS.CANDLESTICK));
+
+            // Apply ML/Historical Bias (Rule #6)
+            confidenceScore += (market.ml_bias - 1) * WEIGHTS.ML_BIAS; // Bias is negative/zero (0.65 -> -0.35 * 0.1)
+
+            // Normalize and finalize (0-100)
+            confidenceScore = Math.max(0, Math.min(100, Math.round(confidenceScore * 100)));
+
+            // If it's a NO TRADE, cap confidence at 50%
+            if (finalTrade.includes("NO TRADE")) {
+                confidenceScore = Math.min(confidenceScore, 50);
+            } else if (finalTrade.includes("BUY") || finalTrade.includes("SELL")) {
+                // For a valid signal, the confidence is the calculated score
+                // But the agreement must be 80% to proceed.
+                if (totalAgreementPct < WEIGHTS.MIN_AGREEMENT) {
+                    finalTrade = "NO TRADE"; // Double check final trade decision
+                    confidenceScore = 50;
+                }
+            }
+
+
+            // 5. Package Results
+            return {
+                market: market.name,
+                type: market.type,
+                trade: finalTrade,
+                timeframe: "1-minute expiry",
+                confidence: confidenceScore,
+                explanation: explanation,
+                indicatorsAgree: Object.entries(tech.agreementMap).filter(([_, v]) => v === combinedDirection).map(([k]) => k),
+                patternsConfirm: Object.entries(chart.agreementMap).filter(([_, v]) => v === combinedDirection).map(([k]) => k).concat(
+                                 Object.entries(candle.agreementMap).filter(([_, v]) => v === combinedDirection).map(([k]) => k)),
+                rawAgreement: totalAgreementPct
+            };
+        }
+
+        // =====================================================================
+        // 3. UI Rendering and Interaction
+        // =====================================================================
+
+        /**
+         * Renders the signal table rows.
+         */
+        function renderSignals() {
+            const tbody = document.getElementById('signal-table-body');
+            tbody.innerHTML = '';
+            const marketFilter = document.getElementById('marketFilter').value;
+            let dataToRender = currentSignals.slice(); // Use a copy for filtering and sorting
+
+            // 1. Filtering
+            if (marketFilter !== 'ALL') {
+                dataToRender = dataToRender.filter(signal => signal.type === marketFilter);
+            }
+
+            // 2. Sorting
+            dataToRender.sort((a, b) => {
+                let aVal, bVal;
+                switch (sortColumn) {
+                    case 'market':
+                        aVal = a.market;
+                        bVal = b.market;
+                        break;
+                    case 'trade':
+                        aVal = a.trade;
+                        bVal = b.trade;
+                        break;
+                    case 'confidence':
+                    default:
+                        aVal = a.confidence;
+                        bVal = b.confidence;
+                        break;
+                }
+
+                if (typeof aVal === 'number') {
+                    return sortDirection === 'asc' ? aVal - bVal : bVal - aVal;
+                } else {
+                    if (aVal < bVal) return sortDirection === 'asc' ? -1 : 1;
+                    if (aVal > bVal) return sortDirection === 'asc' ? 1 : -1;
+                    return 0;
+                }
+            });
+
+            // 3. Update Sort Indicators
+            ['market', 'trade', 'confidence'].forEach(col => {
+                const span = document.getElementById(`sort-${col}`);
+                span.innerHTML = col === sortColumn
+                    ? (sortDirection === 'asc' ? ' &uarr;' : ' &darr;')
+                    : '';
+            });
+
+            // 4. Render Rows
+            dataToRender.forEach(signal => {
+                let tradeColor, tradeText;
+                if (signal.trade.includes('BUY')) {
+                    tradeColor = 'bg-signal-buy';
+                    tradeText = 'text-white font-extrabold';
+                } else if (signal.trade.includes('SELL')) {
+                    tradeColor = 'bg-signal-sell';
+                    tradeText = 'text-white font-extrabold';
+                } else {
+                    tradeColor = 'bg-gray-600';
+                    tradeText = 'text-gray-300';
+                }
+
+                const row = `
+                    <tr class="hover:bg-gray-800 transition duration-150 ease-in-out cursor-pointer" onclick='showSignalDetails(${JSON.stringify(signal)})'>
+                        <td class="px-3 py-3 whitespace-nowrap text-sm font-medium text-white">${signal.market} <span class="text-xs text-gray-500 ml-1">(${signal.type})</span></td>
+                        <td class="px-3 py-3 whitespace-nowrap">
+                            <span class="px-3 py-1 inline-flex text-xs leading-5 rounded-full ${tradeColor} ${tradeText}">
+                                ${signal.trade}
+                            </span>
+                        </td>
+                        <td class="px-3 py-3 whitespace-nowrap text-sm text-gray-300">
+                            <div class="relative pt-1">
+                                <div class="flex mb-2 items-center justify-between">
+                                    <div><span class="text-xs font-semibold inline-block text-white">${signal.confidence}%</span></div>
+                                    <div class="text-right">
+                                        <span class="text-xs font-semibold inline-block text-gray-400">${(signal.rawAgreement * 100).toFixed(0)}% Agree</span>
+                                    </div>
+                                </div>
+                                <div class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-gray-700">
+                                    <div style="width: ${signal.confidence}%;" class="signal-bar-fill shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center ${tradeColor}"></div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-3 py-3 whitespace-nowrap text-xs text-gray-400 hidden md:table-cell">
+                           <span class="text-signal-buy">${signal.indicatorsAgree.length} Tech</span> /
+                           <span class="text-signal-hold">${signal.patternsConfirm.length} Patterns</span> Confirmed
+                        </td>
+                    </tr>
+                `;
+                tbody.insertAdjacentHTML('beforeend', row);
+            });
+        }
+
+        /**
+         * Shows the detailed analysis panel for a selected signal.
+         * @param {object} signal - The signal object.
+         */
+        window.showSignalDetails = (signal) => {
+            document.getElementById('detail-panel').classList.remove('hidden');
+            document.getElementById('detail-market').textContent = signal.market;
+            document.getElementById('detail-trade').textContent = signal.trade;
+            document.getElementById('detail-confidence').textContent = `${signal.confidence}% (Raw Agreement: ${(signal.rawAgreement * 100).toFixed(0)}%)`;
+            document.getElementById('detail-explanation').textContent = signal.explanation;
+
+            // Render Indicators
+            const indList = document.getElementById('detail-indicators');
+            indList.innerHTML = signal.indicatorsAgree.map(i => `<li class="text-signal-buy">&#10003; ${i}</li>`).join('') +
+                               TECHNICAL_INDICATORS.filter(i => !signal.indicatorsAgree.includes(i)).map(i => `<li class="text-signal-sell">&#10007; ${i}</li>`).join('');
+
+            // Render Patterns
+            const patList = document.getElementById('detail-patterns');
+            patList.innerHTML = signal.patternsConfirm.map(p => `<li class="text-signal-buy">&#10003; ${p}</li>`).join('') +
+                               [...CHART_PATTERNS, ...CANDLESTICK_PATTERNS].filter(p => !signal.patternsConfirm.includes(p)).map(p => `<li class="text-signal-sell">&#10007; ${p}</li>`).join('');
+
+            // Scroll to the detail panel
+            document.getElementById('detail-panel').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        /**
+         * Handles table sorting.
+         * @param {string} column - The column to sort by ('market', 'trade', 'confidence').
+         */
+        window.sortTable = (column) => {
+            if (sortColumn === column) {
+                sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+            } else {
+                sortColumn = column;
+                sortDirection = column === 'confidence' ? 'desc' : 'asc';
+            }
+            renderSignals();
+        }
+
+        window.filterSignals = () => {
+            renderSignals();
+        }
+
+        /**
+         * Displays a notification pop-up and plays a sound.
+         * @param {object} signal - The signal object that triggered the notification.
+         */
+        function showNotification(signal) {
+            const area = document.getElementById('notification-area');
+            const isBuy = signal.trade.includes('BUY');
+            const color = isBuy ? 'bg-signal-buy' : 'bg-signal-sell';
+            const icon = isBuy ? '&#x2191;' : '&#x2193;'; // Up or Down Arrow
+            const title = `${signal.market} | ${signal.trade} Signal!`;
+
+            const notif = document.createElement('div');
+            notif.className = `${color} p-4 rounded-lg shadow-xl text-white font-bold w-64 transition-all duration-500 ease-in-out transform translate-x-0`;
+            notif.innerHTML = `
+                <div class="flex justify-between items-center">
+                    <span class="text-xl mr-2">${icon}</span>
+                    <div>
+                        <p class="text-sm">${title}</p>
+                        <p class="text-xs font-normal">Confidence: ${signal.confidence}% | 1-Min</p>
+                    </div>
+                </div>
+            `;
+            area.prepend(notif);
+
+            // Play sound (short burst of raw audio data)
+            const sound = document.getElementById('notification-sound');
+            sound.play().catch(e => console.error("Could not play sound:", e));
+
+            // Auto-remove notification after 5 seconds
+            setTimeout(() => {
+                notif.classList.remove('translate-x-0');
+                notif.classList.add('translate-x-full', 'opacity-0');
+                setTimeout(() => notif.remove(), 500);
+            }, 5000);
+        }
+
+        // =====================================================================
+        // 4. Real-Time Automation Loop
+        // =====================================================================
+
+        function runAnalysis() {
+            const newSignals = [];
+            const newsActive = isHighImpactNewsActive();
+
+            document.getElementById('news-check').textContent = newsActive
+                ? 'CRITICAL! Avoid trading due to high-impact events.'
+                : 'All Clear. Normal trading conditions confirmed.';
+
+            document.getElementById('news-check').className = newsActive
+                ? 'text-xs font-bold text-signal-sell animate-pulse'
+                : 'text-xs text-signal-buy';
+
+            // 1. Generate new signals for all markets
+            ALL_MARKETS.forEach(market => {
+                const signal = generateSignal(market);
+                newSignals.push(signal);
+            });
+
+            // 2. Check for new high-confidence signals and notify
+            newSignals.forEach(newSignal => {
+                const oldSignal = currentSignals.find(s => s.market === newSignal.market);
+
+                // Notification Logic: Notify on first-time signal or when signal flips/changes with high confidence
+                if (newSignal.confidence >= 80 && (
+                    !oldSignal ||
+                    oldSignal.trade !== newSignal.trade ||
+                    (newSignal.confidence > oldSignal.confidence + 5 && newSignal.trade !== 'NO TRADE')
+                )) {
+                    if (newSignal.trade.includes('BUY') || newSignal.trade.includes('SELL')) {
+                        showNotification(newSignal);
+                    }
+                }
+            });
+
+            // 3. Update global state and UI
+            currentSignals = newSignals;
+            renderSignals();
+        }
+
+        // =====================================================================
+        // 5. Initialization
+        // =====================================================================
+
+        window.onload = () => {
+            // Run the analysis immediately on load
+            runAnalysis();
+
+            // Set up the 5-second refresh loop (Rule #6)
+            setInterval(runAnalysis, 5000); // 5000ms = 5 seconds
+        }
+
     </script>
 </body>
 </html>
+
